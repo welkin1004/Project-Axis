@@ -24,6 +24,53 @@ pipeline {
             }
         }
 
+
+-----
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Check out your code from the repository
+                checkout scm
+            }
+        }
+
+        stage('Node.js Tests') {
+            steps {
+                // Run Node.js tests (replace with actual test commands)
+                sh 'npm install'
+                sh 'npm test'
+            }
+        }
+
+        stage('React Tests') {
+            steps {
+                // Run React tests (replace with actual test commands)
+                sh 'cd react-app'
+                sh 'npm install'
+                sh 'npm test'
+            }
+        }
+
+        stage('PHP Tests') {
+            steps {
+                // Run PHP tests (replace with actual test commands)
+                sh 'composer install'
+                sh 'phpunit'
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up or perform any necessary post-build actions
+        }
+    }
+}
+
         stage('Package Artifacts') {
             steps {
                 // Package your application artifacts here (e.g., create JAR files)
