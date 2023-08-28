@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Check out your code from the repository
+                checkout scm
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                // Run your unit tests here
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                // Build the Docker image using the provided Dockerfile
+                script {
+                    def dockerImage = docker.build('my-custom-image', '-f Dockerfile .')
+                }
+            }
+        }
+
+        stage('Package Artifacts') {
+            steps {
+                // Package your application artifacts here (e.g., create JAR files)
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                // Run the Docker container from the built image
+                script {
+                    docker.image('my-custom-image').run('-p 8080:80')
+                }
+            }
+        }
+
+        stage('Integration Tests') {
+            steps {
+                // Run your integration tests against the running Docker container
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up by stopping and removing the Docker container
+            script {
+                docker.image('my-custom-image').stop()
+                docker.image('my-custom-image').remove(force: true)
+            }
+        }
+    }
+}
